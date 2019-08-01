@@ -1,5 +1,6 @@
 from package.disable_package import disable_package_main
 from package.package_list import show_package_list
+from error import check_connection
 
 while True:
     print('\n')
@@ -18,12 +19,15 @@ while True:
     print('2: disable package list')
     print('3: pull package')
     print('4: push package')
-    print('5: exit')
+    print('5: miscellaneous')
+    print('6: exit')
 
     print('\n')
 
+    check_connection()
+
     try:
-        choice = int(input('input number what you want to do : ')) 
+        choice = int(input('input number what you want to do : '))
     except ValueError:
         choice = None
 
@@ -36,6 +40,8 @@ while True:
     elif choice is 4:
         print('Not implemented')
     elif choice is 5:
+        print('Not implemented')
+    elif choice is 6:
         exit(0)
     else:
         print('Invalid Input!')
