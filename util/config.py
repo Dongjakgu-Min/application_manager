@@ -1,4 +1,6 @@
 import os
+from util.tool import input_int
+from util.error import error_printer
 
 
 def config_main():
@@ -11,11 +13,8 @@ def config_main():
         print('3. LG')
         print('4. custom')
         print('5. back')
-    
-        try:
-            i = int(input('choose what do you want : '))
-        except ValueError:
-            i = None
+        i = input_int()
+
         if i is 1:
             package_list = get_config(os.path.join(path, 'skt'))
             break
@@ -33,7 +32,6 @@ def config_main():
             return None
         else:
             print('Invalid Input!')
-    
     return package_list
 
 
@@ -43,7 +41,6 @@ def get_config(path):
         if check is True:
             break
         path = input('\nPlease input Absolute Path : ')
-    
     with open(path) as f:
         result = f.read().splitlines()
 
@@ -52,17 +49,10 @@ def get_config(path):
 
 def file_check(path):
     if not os.path.exists(path):
-        print('[ERR] file not exist!')
-        print('[ERR] Please Check input path.')
+        error_printer('file_not_exist')
         return False
-    
     if not os.path.isfile(path):
-        print('[ERR] It is not config, Did you check where is it?')
+        error_printer('not_config')
         return False
 
     return True
-
-
-if __name__ == "__main__":
-    path = os.path.join(os.getcwd(), 'config')
-    print(get_config(os.path.join(path, 'skt')))

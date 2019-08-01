@@ -1,6 +1,7 @@
 from package.disable_package import disable_package_main
 from package.package_list import show_package_list
-from error import check_connection
+from util.tool import check_connection, input_int, connection_is_valid
+from util.error import error_printer
 
 while True:
     print('\n')
@@ -12,7 +13,6 @@ while True:
     print('/          DongjakGuMin(songyw9812@gmail.com)           /')
     print('/                                                       /')
     print('/////////////////////////////////////////////////////////')
-
     print('\n')
 
     print('1: show package list')
@@ -24,17 +24,13 @@ while True:
 
     print('\n')
 
-    check_connection()
-
-    try:
-        choice = int(input('input number what you want to do : '))
-    except ValueError:
-        choice = None
+    client = check_connection()
+    choice = input_int()
 
     if choice is 1:
-        show_package_list()
+        show_package_list(connection_is_valid(client))
     elif choice is 2:
-        disable_package_main()
+        disable_package_main(connection_is_valid(client))
     elif choice is 3:
         print('Not implemented')
     elif choice is 4:

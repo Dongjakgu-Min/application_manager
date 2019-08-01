@@ -1,6 +1,10 @@
 import subprocess
 import sys
-from config import config_main
+from util.config import config_main
+from adb.client import Client as AdbClient
+
+client = AdbClient(host='127.0.0.1', port=5037)
+device = client.devices()
 
 
 def disable_package_main():
@@ -14,13 +18,15 @@ def disable_package_main():
 
 
 def disable_package(package_name):
-    adb = subprocess.run(['adb', 'shell', 'pm', 'uninstall', '-k', '--user', '0', package_name], stdout=subprocess.PIPE, encoding='utf-8')
+    adb = subprocess.run(['adb', 'shell', 'pm', 'uninstall', '-k', '--user',
+                          '0', package_name], stdout=subprocess.PIPE, encoding='utf-8')
     if adb is not 'Success':
         print(adb.stdout.split('\n')[0])
 
 
 def disable_package_list(packages):
-    print('\n\nAre you sure disable this packages? Please remind package name : \n')
+    print('\n\nAre you sure disable this packages? \
+           Please remind package name : \n')
 
     for p in packages:
         print(p)
@@ -38,7 +44,7 @@ def disable_package_list(packages):
             break
         else:
             print('Invalid Input!')
-    
+
     input('\npress any key to continue...')
 
 
