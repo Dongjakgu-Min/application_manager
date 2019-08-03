@@ -5,38 +5,40 @@ import subprocess
 # More Better Solution...?
 client = AdbClient(host='127.0.0.1', port=5037)
 try:
-    device = client.devices()
+    list_device = client.devices()
 except RuntimeError:
     subprocess.run(['adb', 'start-server'])
-    device = client.devices()
+    list_device = client.devices()
+device = None
 
 
 def check_connection():
-    global device
+    global list_device
 
-    if len(device) is 0:
+    if len(list_device) is 0:
         print(list_error['not_connected'])
 
         while len(client.devices()) is 0:
             pass
         print(list_info['connected'])
-    if len(device) > 1:
+    if len(list_device) > 1:
         print(list_info['one_more_con'])
-        for i, d in enumerate(device):
+        for i, d in enumerate(list_device):
             print('{0}. {1}'.format(i, d.serial))
         i = input_int()
-        return device[i]
+        return set_device(list_device[i])
 
-    return device[0]
+    return set_device(list_device[0])
 
 
 def connection_is_valid(user):
-    global device, client
+    global client
+    connected_list = []
 
-    connected = client.devices()
-    print(connected)
+    for i in client.devices():
+        connected_list.append(i.serial)
 
-    if user not in connected:
+    if user.serial not in connected_list:
         print(list_error['disconnected'])
 
         while user not in client.devices():
@@ -51,3 +53,14 @@ def input_int():
     except ValueError:
         choice = None
     return choice
+
+
+def set_device(_device):
+    global device
+    device = _device
+    return _device
+
+
+def get_device():
+    global device
+    return device

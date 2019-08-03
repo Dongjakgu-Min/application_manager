@@ -30,7 +30,7 @@ while True:
     if choice is 1:
         show_package_list(connection_is_valid(client))
     elif choice is 2:
-        disable_package_main(connection_is_valid(client))
+        disable_package_main()
     elif choice is 3:
         print('Not implemented')
     elif choice is 4:

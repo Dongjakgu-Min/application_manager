@@ -1,9 +1,10 @@
 from adb.client import Client as AdbClient
-import sys
+from util.tool import get_device, connection_is_valid
 
 
 def show_package_list(device):
     a = device.shell('pm list packages -s')
+    connection_is_valid(device)
 
     for line in a.split('\n'):
         if len(line) is not 0:
@@ -13,11 +14,11 @@ def show_package_list(device):
     input('\npress any key to continue...')
 
 
-def show_package_by_name(device):
+def show_package_by_name():
     name = input('Input Package Name : ')
     result = []
 
-    for p in get_package_list(device):
+    for p in get_package_list(get_device()):
         if name in p:
             print(p)
 
@@ -35,11 +36,11 @@ def get_package_list(device):
     return result
 
 
-def find_package_by_name(device):
+def find_package_by_name():
     name = input('Input Package Name : ')
     result = []
 
-    for p in get_package_list(device):
+    for p in get_package_list(get_device()):
         if name in p:
             result.append(p)
     return result
