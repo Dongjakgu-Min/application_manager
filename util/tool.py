@@ -1,5 +1,5 @@
 from adb.client import Client as AdbClient
-from util.error import list_error, list_info
+from util.noti import err_printer, info_printer
 import subprocess
 
 # More Better Solution...?
@@ -7,6 +7,7 @@ client = AdbClient(host='127.0.0.1', port=5037)
 try:
     list_device = client.devices()
 except RuntimeError:
+    err_printer('adb_not')
     subprocess.run(['adb', 'start-server'])
     list_device = client.devices()
 device = None
@@ -16,13 +17,13 @@ def check_connection():
     global list_device
 
     if len(list_device) is 0:
-        print(list_error['not_connected'])
+        err_printer('not_connected')
 
         while len(client.devices()) is 0:
             pass
-        print(list_info['connected'])
+        info_printer('connected')
     if len(list_device) > 1:
-        print(list_info['one_more_con'])
+        info_printer('one_more_con')
         for i, d in enumerate(list_device):
             print('{0}. {1}'.format(i, d.serial))
         i = input_int()
@@ -39,11 +40,11 @@ def connection_is_valid(user):
         connected_list.append(i.serial)
 
     if user.serial not in connected_list:
-        print(list_error['disconnected'])
+        err_printer('disconnected')
 
         while user not in client.devices():
             pass
-        print(list_info['connected'])
+        info_printer('connected')
     return user
 
 

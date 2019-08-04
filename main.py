@@ -1,9 +1,11 @@
 from package.disable_package import disable_package_main
 from package.package_list import show_package_list
 from util.tool import check_connection, input_int, connection_is_valid
-from util.error import error_printer
+from util.noti import err_printer
 
 while True:
+    client = check_connection()
+
     print('\n')
     print('/////////////////////////////////////////////////////////')
     print('/                                                       /')
@@ -23,8 +25,6 @@ while True:
     print('6: exit')
 
     print('\n')
-
-    client = check_connection()
     choice = input_int()
 
     if choice is 1:

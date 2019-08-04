@@ -1,6 +1,6 @@
 import os
 from util.tool import input_int
-from util.error import error_printer
+from util.noti import err_printer, info_printer
 
 
 def config_main():
