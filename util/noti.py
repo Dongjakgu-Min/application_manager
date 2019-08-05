@@ -10,7 +10,7 @@ list_info = {
     'aapt_check': '[INFO] Check aapt already installed...',
     'aapt_ok': '[INFO] aapt already installed!',
     'aapt_not': '[INFO] aapt not installed! Installing aapt via usb debugging...',
-    'aapt_installed': '[INFO] aapt install complete!'
+    'aapt_complete': '[INFO] aapt install complete!'
 }
 
 
