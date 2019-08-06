@@ -21,3 +21,10 @@ def get_package_label(path):
     name = device.shell('/data/local/tmp/aapt d badging ' +
                         path + ' | grep application-label-ko:')
     return name.split(':')[-1].strip()
+
+
+if __name__ == "__main__":
+    a = "package:/data/app/com.samsung.android.video-lzMYdKJRrqaF_wBEkgp6Yw==/base.apk=com.samsung.android.video"
+    length = len(a.split(':')[-1].split('=')[-1]) + 1
+    print(a[:-length])
+    

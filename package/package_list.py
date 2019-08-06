@@ -1,15 +1,17 @@
 from adb.client import Client as AdbClient
-from util.tool import get_device, connection_is_valid
+from util.tool import get_device, connection_is_valid, get_package_information
+from util.init import get_package_label
 
 
 def show_package_list(device):
-    a = device.shell('pm list packages -s')
+    a = device.shell('pm list packages -s -f')
     connection_is_valid(device)
 
     for line in a.split('\n'):
         if len(line) is not 0:
-            print('Package Name : {0}'.format(
-                line.split(':')[-1].split('=')[-1]))
+            package_name, package_path = get_package_information(line)
+            package_label = get_package_label(package_path)
+            print('Package Name : {0}, Package Label : {1}'.format(package_name, package_label))
 
     input('\npress any key to continue...')
 

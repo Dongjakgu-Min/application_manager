@@ -65,3 +65,9 @@ def set_device(_device):
 def get_device():
     global device
     return device
+
+
+def get_package_information(line):
+    package_name = line.split(':')[-1].split('=')[-1]
+    package_path = line[8:-(len(package_name)+1)]
+    return package_name, package_path
