@@ -1,10 +1,10 @@
 from util.noti import err_printer, info_printer
-from util.tool import get_device
+from util.tool import check_connection
 from adb.client import Client as AdbClient
 
 
 def check_aapt():
-    device = get_device()
+    device = check_connection()
     info_printer('aapt_check')
     result = device.shell('/data/local/tmp/aapt')
 
@@ -17,7 +17,7 @@ def check_aapt():
 
 
 def get_package_label(path):
-    device = get_device()
+    device = check_connection()
     name = device.shell('/data/local/tmp/aapt d badging ' +
                         path + ' | grep application-label-ko:')
     return name.split(':')[-1].strip()
@@ -26,5 +26,4 @@ def get_package_label(path):
 if __name__ == "__main__":
     a = "package:/data/app/com.samsung.android.video-lzMYdKJRrqaF_wBEkgp6Yw==/base.apk=com.samsung.android.video"
     length = len(a.split(':')[-1].split('=')[-1]) + 1
-    print(a[:-length])
-    
+    print(a[:-length])    

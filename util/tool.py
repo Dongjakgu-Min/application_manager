@@ -10,11 +10,10 @@ except RuntimeError:
     err_printer('adb_not')
     subprocess.run(['adb', 'start-server'])
     list_device = client.devices()
-device = None
 
 
 def check_connection():
-    global list_device
+    list_device = client.devices()
 
     if len(list_device) is 0:
         err_printer('not_connected')
@@ -22,14 +21,16 @@ def check_connection():
         while len(client.devices()) is 0:
             pass
         info_printer('connected')
+        list_device = client.devices()
+
     if len(list_device) > 1:
         info_printer('one_more_con')
         for i, d in enumerate(list_device):
             print('{0}. {1}'.format(i, d.serial))
         i = input_int()
-        return set_device(list_device[i])
+        return list_device[i]
 
-    return set_device(list_device[0])
+    return list_device[0]
 
 
 def connection_is_valid(user):
@@ -54,17 +55,6 @@ def input_int():
     except ValueError:
         choice = None
     return choice
-
-
-def set_device(_device):
-    global device
-    device = _device
-    return _device
-
-
-def get_device():
-    global device
-    return device
 
 
 def get_package_information(line):

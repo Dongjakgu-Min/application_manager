@@ -1,5 +1,5 @@
 from adb.client import Client as AdbClient
-from util.tool import get_device, connection_is_valid, get_package_information
+from util.tool import connection_is_valid, get_package_information
 from util.init import get_package_label
 
 

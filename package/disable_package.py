@@ -1,5 +1,5 @@
 from util.config import config_main
-from util.tool import get_device, connection_is_valid
+from util.tool import connection_is_valid, check_connection
 from adb.client import Client as AdbClient
 
 
@@ -14,7 +14,7 @@ def disable_package_main():
 
 
 def disable_package(package_name):
-    device = get_device()
+    device = check_connection()
     adb = device.shell('pm uninstall -k --user 0 ' + package_name)
     if adb is not 'Success':
         print(adb.split('\n')[0])
