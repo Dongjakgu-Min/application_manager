@@ -1,10 +1,9 @@
 from util.noti import err_printer, info_printer
-from util.tool import check_connection
+from util.tool import check_connection, connection_is_valid
 from adb.client import Client as AdbClient
 
 
-def check_aapt():
-    device = check_connection()
+def check_aapt(device):
     info_printer('aapt_check')
     result = device.shell('/data/local/tmp/aapt')
 
@@ -21,6 +20,11 @@ def get_package_label(path):
     name = device.shell('/data/local/tmp/aapt d badging ' +
                         path + ' | grep application-label-ko:')
     return name.split(':')[-1].strip()
+
+
+def delete_aapt():
+    device = check_connection()
+    device.shell('rm /data/local/tmp/aapt')
 
 
 if __name__ == "__main__":
