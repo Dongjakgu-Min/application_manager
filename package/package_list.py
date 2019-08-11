@@ -11,8 +11,8 @@ def show_package_list(device):
 
     for line in a.split('\n'):
         if len(line) is not 0:
-            package_name, package_label = get_package_information(line)
-            if package_label is None:
+            package_name, package_label, _ = get_package_information(line)
+            if len(package_label) is not 0:
                 print('Package Name : {0}'.format(package_name))
             else:
                 print('Package Name : {0}, Package Label : {1}'.format(
