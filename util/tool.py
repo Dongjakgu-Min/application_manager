@@ -1,15 +1,8 @@
 from adb.client import Client as AdbClient
-from util.noti import err_printer, info_printer
+from .noti import err_printer, info_printer
+from .initial import client
+from pathlib import Path
 import subprocess
-
-# More Better Solution...?
-client = AdbClient(host='127.0.0.1', port=5037)
-try:
-    list_device = client.devices()
-except RuntimeError:
-    err_printer('adb_not')
-    subprocess.run(['adb', 'start-server'])
-    list_device = client.devices()
 
 
 def check_connection():
@@ -34,7 +27,6 @@ def check_connection():
 
 
 def connection_is_valid(user):
-    global client
     connected_list = []
 
     for i in client.devices():
@@ -60,4 +52,55 @@ def input_int():
 def get_package_information(line):
     package_name = line.split(':')[-1].split('=')[-1]
     package_path = line[8:-(len(package_name)+1)]
-    return package_name, package_path
+    print(package_path)
+    package_label = get_package_label(package_path)
+    return package_name, package_label
+
+
+def config_writer(data):
+    result = '\n'.join(data)
+    return result
+
+
+def get_package_label(path):
+    device = check_connection()
+    name = device.shell('/data/local/tmp/aapt d badging ' +
+                        path + ' | grep application-label-ko:')
+    return name.split(':')[-1].strip()
+
+
+def check_aapt(device):
+    info_printer('aapt_check')
+    result = device.shell('/data/local/tmp/aapt')
+
+    if 'not found' in result:
+        info_printer('aapt_not')
+        device.push('./util/aapt/aapt', '/data/local/tmp/aapt', 0o755)
+        info_printer('aapt_complete')
+    else:
+        info_printer('aapt_ok')
+
+
+def delete_aapt():
+    device = check_connection()
+    device.shell('rm /data/local/tmp/aapt')
+
+
+def dir_check(path):
+    parent_dir = Path(path).parent
+
+    if parent_dir.is_dir() is False:
+        Path.mkdir(parent_dir)
+
+    return path
+
+
+def file_check(path):
+    if not Path(path).exists:
+        error_printer('file_not_exist')
+        return False
+    if not Path(path).is_dir:
+        error_printer('not_config')
+        return False
+
+    return True

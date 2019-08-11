@@ -5,7 +5,6 @@ from util.noti import err_printer
 
 while True:
     client = check_connection()
-    
 
     print('\n')
     print('/////////////////////////////////////////////////////////')

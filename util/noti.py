@@ -10,7 +10,12 @@ list_info = {
     'aapt_check': '[INFO] Check aapt already installed...',
     'aapt_ok': '[INFO] aapt already installed!',
     'aapt_not': '[INFO] aapt not installed! Installing aapt via usb debugging...',
-    'aapt_complete': '[INFO] aapt install complete!'
+    'aapt_complete': '[INFO] aapt install complete!',
+    'config_write_info': '[INFO] if you finish writing package list, input END',
+    'done': '[INFO] Done!',
+    'list_make_input': '[INFO] Please input package name.\n\
+    [INFO] If you want to end up append, Please input to end.\n\
+    [INFO] If you want to add more package, input package name and press enter.\n'
 }
 
 

@@ -1,10 +1,11 @@
-import os
-from util.tool import input_int
+from util.tool import input_int, file_check, connection_is_valid
 from util.noti import err_printer, info_printer
+from package.package_list import make_package_list
+from pathlib import Path
 
 
-def config_main():
-    path = os.path.join(os.getcwd(), 'config')
+def config_main(device):
+    path = Path.cwd() / 'config'
 
     while True:
         print('\nchoose config setting : ')
@@ -12,23 +13,28 @@ def config_main():
         print('2. KT')
         print('3. LG')
         print('4. custom')
-        print('5. back')
+        print('5. create config file')
+        print('99. back')
         i = input_int()
 
         if i is 1:
-            package_list = get_config(os.path.join(path, 'skt'))
+            package_list = get_config(path / 'skt')
             break
         elif i is 2:
-            package_list = get_config(os.path.join(path, 'kt'))
+            package_list = get_config(path / 'kt')
             break
         elif i is 3:
-            package_list = get_config(os.path.join(path, 'lg'))
+            package_list = get_config(path / 'lg')
             break
         elif i is 4:
             custom_path = input('\nPlease input Absolute Path : ')
             package_list = get_config(custom_path)
             break
         elif i is 5:
+            valid = connection_is_valid(device)
+            make_package_list(valid)
+            return None
+        elif i is 99:
             return None
         else:
             print('Invalid Input!')
@@ -45,14 +51,3 @@ def get_config(path):
         result = f.read().splitlines()
 
     return result
-
-
-def file_check(path):
-    if not os.path.exists(path):
-        error_printer('file_not_exist')
-        return False
-    if not os.path.isfile(path):
-        error_printer('not_config')
-        return False
-
-    return True

@@ -1,6 +1,7 @@
 from adb.client import Client as AdbClient
-from util.tool import connection_is_valid, get_package_information, check_connection
-from util.init import get_package_label, check_aapt
+from util.tool import connection_is_valid, get_package_information, check_connection, config_writer, check_aapt
+from util.noti import info_printer, err_printer
+from pathlib import Path
 
 
 def show_package_list(device):
@@ -10,10 +11,12 @@ def show_package_list(device):
 
     for line in a.split('\n'):
         if len(line) is not 0:
-            package_name, package_path = get_package_information(line)
-            package_label = get_package_label(package_path)
-            print('Package Name : {0}, Package Label : {1}'.format(
-                package_name, package_label))
+            package_name, package_label = get_package_information(line)
+            if package_label is None:
+                print('Package Name : {0}'.format(package_name))
+            else:
+                print('Package Name : {0}, Package Label : {1}'.format(
+                    package_name, package_label))
 
     input('\npress any key to continue...')
 
@@ -52,3 +55,28 @@ def find_package_by_name(device):
         if name in p:
             result.append(p)
     return result
+
+
+def make_package_list(device):
+    valid_device = connection_is_valid(device)
+    # show_package_list(valid_device)
+    package_list = list()
+
+    info_printer('config_write_info')
+    config_name = str(input('Please Input config file name : '))
+
+    config_descriptor = Path(Path.cwd() / 'config' /
+                             config_name).open('w', encoding='utf-8')
+
+    info_printer('list_make_input')
+    while True:
+        package_name = str(input())
+        print('INPUT : {0}'.format(package_name))
+        if package_name == 'END':
+            break
+        else:
+            package_list.append(package_name)
+    package_config = config_writer(package_list)
+    config_descriptor.write(package_config)
+
+    info_printer('done')

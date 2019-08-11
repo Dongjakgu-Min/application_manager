@@ -4,7 +4,7 @@ from adb.client import Client as AdbClient
 
 
 def disable_package_main(client):
-    package_list = config_main()
+    package_list = config_main(client)
 
     if package_list is not None:
         disable_package_list(package_list, client)
