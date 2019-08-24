@@ -1,4 +1,4 @@
-from .noti import err_printer, info_printer
+from .noti import *
 from adb.client import Client as AdbClient
 
 import subprocess

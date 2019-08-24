@@ -2,6 +2,7 @@ from adb.client import Client as AdbClient
 from .noti import err_printer, info_printer
 from .initial import client
 from pathlib import Path
+from pynput.keyboard import Key, Listener
 import subprocess
 
 
@@ -52,9 +53,8 @@ def input_int():
 def get_package_information(line):
     package_name = line.split(':')[-1].split('=')[-1]
     package_path = line[8:-(len(package_name)+1)]
-    print(package_path)
     package_label = get_package_label(package_path)
-    return package_name, package_label
+    return package_name, package_label, package_path
 
 
 def config_writer(data):
@@ -87,20 +87,18 @@ def delete_aapt():
 
 
 def dir_check(path):
-    parent_dir = Path(path).parent
-
-    if parent_dir.is_dir() is False:
-        Path.mkdir(parent_dir)
+    if path.is_dir() is False:
+        Path.mkdir(path)
 
     return path
 
 
 def file_check(path):
     if not Path(path).exists:
-        error_printer('file_not_exist')
+        err_printer('file_not_exist')
         return False
     if not Path(path).is_dir:
-        error_printer('not_config')
+        err_printer('not_config')
         return False
 
     return True
