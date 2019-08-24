@@ -14,6 +14,7 @@ def config_main(device):
         print('3. LG')
         print('4. custom')
         print('5. create config file')
+        print('6. manual mode')
         print('99. back')
         i = input_int()
 
@@ -34,6 +35,8 @@ def config_main(device):
             valid = connection_is_valid(device)
             make_package_list(valid)
             return None
+        elif i is 6:
+            return 'Manual'
         elif i is 99:
             return None
         else:

@@ -9,6 +9,8 @@ def disable_package_main(client):
 
     if package_list is not None:
         disable_package_list(client, package_list)
+    elif package_list is 'Manual':
+        disable_package_manual(client)
     else:
         input('\npress any key to continue...')
         return
@@ -46,3 +48,8 @@ def disable_package_list(device, packages):
             print('Invalid Input!')
 
     input('\npress any key to continue...')
+
+
+def disable_package_manual(device):
+    print('Please Input Package Name : ')
+
