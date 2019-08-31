@@ -1,10 +1,10 @@
-from package.disable_package import disable_package_main
+from package.disable_package import main
 from package.package_list import show_package_list
-from util.tool import check_connection, input_int, connection_is_valid
-from util.noti import err_printer
+from util.tool import input_int
+from util.adb import connection
 
 while True:
-    client = check_connection()
+    client = connection.check()
 
     print('\n')
     print('/////////////////////////////////////////////////////////')
@@ -28,9 +28,9 @@ while True:
     choice = input_int()
 
     if choice is 1:
-        show_package_list(connection_is_valid(client))
+        show_package_list(connection.is_valid(client))
     elif choice is 2:
-        disable_package_main(connection_is_valid(client))
+        main(connection.is_valid(client))
     elif choice is 3:
         print('Not implemented')
     elif choice is 4:

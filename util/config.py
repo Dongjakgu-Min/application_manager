@@ -1,5 +1,5 @@
-from util.tool import input_int, file_check, connection_is_valid
-from util.noti import err_printer, info_printer
+from util.tool import input_int, file_check
+from util.adb import connection
 from package.package_list import make_package_list
 from pathlib import Path
 
@@ -32,7 +32,7 @@ def config_main(device):
             package_list = get_config(custom_path)
             break
         elif i is 5:
-            valid = connection_is_valid(device)
+            valid = connection.is_valid(device)
             make_package_list(valid)
             return None
         elif i is 6:

@@ -1,44 +1,44 @@
 from util.config import config_main
-from util.tool import connection_is_valid, dir_check
+from util.adb import connection
+from util.adb.adb_operate import adb_pull
 from package.pull_package import pull_package_by_name
-from adb.client import Client as AdbClient
 
 
-def disable_package_main(client):
+def main(client):
     package_list = config_main(client)
 
     if package_list is not None:
-        disable_package_list(client, package_list)
+        by_list(client, package_list)
     elif package_list is 'Manual':
-        disable_package_manual(client)
+        manual(client)
     else:
         input('\npress any key to continue...')
         return
 
 
-def disable_package(device, package_name):
-    valid_device = connection_is_valid(device)
-    pull_package_by_name(valid_device, package_name)
+def execute(device, package_name):
+    valid_device = connection.is_valid(device)
+    adb_pull(valid_device, package_name)
 
     adb = valid_device.shell('pm uninstall -k --user 0 ' + package_name)
     if adb is not 'Success':
         print(adb.split('\n')[0])
 
 
-def disable_package_list(device, packages):
+def by_list(device, packages):
     print('\n\nAre you sure disable this packages? '
           'Please remind package name : \n')
 
     for p in packages:
         print(p)
 
-    valid_device = connection_is_valid(device)
+    valid_device = connection.is_valid(device)
     while True:
         check = input('\nYes(y)/No(n) : ')
 
         if check is 'y':
             for p in packages:
-                disable_package(valid_device, p)
+                execute(valid_device, p)
             print('\nDisable Complete!')
             break
         elif check is 'n':
@@ -50,6 +50,6 @@ def disable_package_list(device, packages):
     input('\npress any key to continue...')
 
 
-def disable_package_manual(device):
+def manual(device):
     print('Please Input Package Name : ')
 

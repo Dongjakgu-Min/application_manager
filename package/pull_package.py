@@ -1,12 +1,12 @@
-from util.initial import client
-from util.tool import connection_is_valid, dir_check
+from util.tool import dir_check
+from util.adb import connection
 from pathlib import Path
 
 
 def pull_package_by_path(device, package_path):
     package_name = Path(package_path).parts[-2]
 
-    valid = connection_is_valid(device)
+    valid = connection.is_valid(device)
     path = dir_check(Path.cwd() / 'backup' / package_name)
 
     valid.pull(package_path, path)
