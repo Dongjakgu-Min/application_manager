@@ -1,5 +1,4 @@
-from package.disable_package import main
-from package.package_list import show_package_list
+from package import disable_package, package_list
 from util.tool import input_int
 from util.adb import connection
 
@@ -28,9 +27,9 @@ while True:
     choice = input_int()
 
     if choice is 1:
-        show_package_list(connection.is_valid(client))
+        package_list.show(connection.is_valid(client))
     elif choice is 2:
-        main(connection.is_valid(client))
+        disable_package.main(connection.is_valid(client))
     elif choice is 3:
         print('Not implemented')
     elif choice is 4:

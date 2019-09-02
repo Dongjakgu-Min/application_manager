@@ -78,14 +78,21 @@ class PackageList:
     def __init__(self, package_list):
         self.label = Trie()
         self.package = Trie()
-        self.package_mode = False
+        self.package_mode = True
 
-        self.label.insert(package_list['label'])
-        self.package.insert(package_list['package'])
+        for i in package_list:
+            print(i)
+            if 'label' in i:
+                self.label.insert(i['label'])
+            if 'package' in i:
+                self.package.insert(i['package'])
 
     def change_mode(self):
         print('[INFO] Change input mode : {0}'.format('package' if self.package_mode is True else 'label'))
         self.package_mode = True
+
+    def is_package_mode(self):
+        return self.package_mode
 
     def find_by_label(self, prefix):
         label_result = self.label.starts_with(prefix)
@@ -115,7 +122,7 @@ class PackageList:
 
         if isinstance(_result, type(None)):
             print('[INFO] No match item')
-            return
+            return list()
 
         return _result
 

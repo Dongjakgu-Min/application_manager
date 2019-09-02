@@ -1,19 +1,21 @@
 from util.config import config_main
 from util.adb import connection
 from util.adb.adb_operate import adb_pull
-from package.pull_package import pull_package_by_name
+from util.package_info.trie import PackageList
+from util.noti import info_printer
+
+from package import package_list
 
 
 def main(client):
-    package_list = config_main(client)
+    package_list_ = config_main(client)
 
-    if package_list is not None:
-        by_list(client, package_list)
-    elif package_list is 'Manual':
+    if package_list_ is None:
+        return
+    elif package_list_ == 'Manual':
         manual(client)
     else:
-        input('\npress any key to continue...')
-        return
+        by_list(client, package_list_)
 
 
 def execute(device, package_name):
@@ -26,13 +28,14 @@ def execute(device, package_name):
 
 
 def by_list(device, packages):
+    valid_device = connection.is_valid(device)
+
     print('\n\nAre you sure disable this packages? '
           'Please remind package name : \n')
 
     for p in packages:
         print(p)
 
-    valid_device = connection.is_valid(device)
     while True:
         check = input('\nYes(y)/No(n) : ')
 
@@ -50,6 +53,29 @@ def by_list(device, packages):
     input('\npress any key to continue...')
 
 
-def manual(device):
-    print('Please Input Package Name : ')
+def manual(client):
+    valid_device = connection.is_valid(client)
+    _list = package_list.get(valid_device)
 
+    packages = PackageList(_list)
+
+    while True:
+        _str = input('\n> ')
+
+        if _str == '/END':
+            break
+        elif _str == '/MODE':
+            packages.change_mode()
+
+        if len(_str) is 0:
+            continue
+
+        items = packages.find(_str)
+        print(items)
+        if len(items) is 1:
+            execute(valid_device, items[0])
+        else:
+            for i in items:
+                print("{0} ".format(i), end='', flush=True)
+
+    info_printer('package_manual_end')

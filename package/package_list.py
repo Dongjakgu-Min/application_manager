@@ -7,7 +7,7 @@ from util.package_info.trie import PackageList
 from pathlib import Path
 
 
-def show_package_list(device):
+def show(device):
     valid_device = is_valid(device)
     check_aapt(valid_device)
     a = valid_device.shell('pm list packages -s -f')
@@ -24,9 +24,11 @@ def show_package_list(device):
     input('\npress any key to continue...')
 
 
-def get_package_list(device):
+def get(device):
     valid_device = is_valid(device)
     check_aapt(valid_device)
+
+    info_printer('package_list_loading')
     a = valid_device.shell('pm list packages -s -f')
     package_list = list()
 
@@ -41,20 +43,20 @@ def get_package_list(device):
     return package_list
 
 
-def show_package_by_name(device):
+def show_by_name(device):
     name = input('Input Package Name : ')
     result = []
 
     valid_device = is_valid(device)
 
-    for p in print_package_list(valid_device):
+    for p in get_list(valid_device):
         if name in p:
             print(p)
 
     input('\npress any key to continue...')
 
 
-def print_package_list(device):
+def get_list(device):
     adb = device.shell('pm list packages -s')
     result = []
 
@@ -71,7 +73,7 @@ def find_package_by_name(device):
 
     valid_device = is_valid(device)
 
-    for p in print_package_list(valid_device):
+    for p in get_list(valid_device):
         if name in p:
             result.append(p)
     return result
@@ -79,8 +81,7 @@ def find_package_by_name(device):
 
 def make_package_list(device):
     valid_device = is_valid(device)
-    # show_package_list(valid_device)
-    package_list = get_package_list(valid_device)
+    package_list = get(valid_device)
     packages = list()
 
     info_printer('config_write_info')
@@ -96,10 +97,11 @@ def make_package_list(device):
         package_input = str(input('> '))
         if package_input == '/END':
             break
-        elif package_list == '/mode':
+        elif package_list == '/MODE':
             helper.change_mode()
         else:
             packages.append(package_input)
+
     package_config = config_writer(packages)
     config_descriptor.write(package_config)
 

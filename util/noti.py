@@ -17,7 +17,9 @@ list_info = {
     'done': '[INFO] Done!',
     'list_make_input': '[INFO] Please input package name.\
     \n[INFO] If you want to end up append, Please input to end.\
-    \n[INFO] If you want to add more package, input package name and press enter.\n'
+    \n[INFO] If you want to add more package, input package name and press enter.\n',
+    'package_list_loading': '[INFO] Loading Package List...',
+    'package_manual_end': '[INFO] Manual Editing Complete.'
 }
 
 
