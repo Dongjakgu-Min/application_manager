@@ -3,11 +3,6 @@ from util.noti import err_printer, info_printer
 from util.tool import input_int
 
 
-def package_list(connect):
-    packages = connect.socket.makefile()
-    data = packages.readlines()
-
-
 def check():
     list_device = client.devices()
 

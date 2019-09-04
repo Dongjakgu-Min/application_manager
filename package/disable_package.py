@@ -1,9 +1,9 @@
 from util.config import config_main
 from util.adb import connection
 from util.adb.adb_operate import adb_pull
-from util.package_info.trie import PackageList
+from util.package_info.Package import PackageList
 from util.noti import info_printer
-
+from util.tool import write_list
 from package import package_list
 
 
@@ -20,11 +20,14 @@ def main(client):
 
 def execute(device, package_name):
     valid_device = connection.is_valid(device)
-    adb_pull(valid_device, package_name)
 
-    adb = valid_device.shell('pm uninstall -k --user 0 ' + package_name)
-    if adb is not 'Success':
-        print(adb.split('\n')[0])
+    for i in package_name:
+        adb_pull(valid_device, i['path'])
+
+        adb = valid_device.shell('pm uninstall -k --user 0 ' + i['package'])
+        print(adb)
+        if adb is not 'Success':
+            print(adb.split('\n')[0])
 
 
 def by_list(device, packages):
@@ -56,26 +59,10 @@ def by_list(device, packages):
 def manual(client):
     valid_device = connection.is_valid(client)
     _list = package_list.get(valid_device)
+    print(_list)
 
     packages = PackageList(_list)
-
-    while True:
-        _str = input('\n> ')
-
-        if _str == '/END':
-            break
-        elif _str == '/MODE':
-            packages.change_mode()
-
-        if len(_str) is 0:
-            continue
-
-        items = packages.find(_str)
-        print(items)
-        if len(items) is 1:
-            execute(valid_device, items[0])
-        else:
-            for i in items:
-                print("{0} ".format(i), end='', flush=True)
+    result = write_list(packages)
+    execute(client, result)
 
     info_printer('package_manual_end')

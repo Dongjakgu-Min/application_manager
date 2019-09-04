@@ -1,53 +1,50 @@
 from util.aapt.aapt_handler import check_aapt
-from util.adb.connection import is_valid
-from util.package_info.get_package import information
-from util.tool import *
+from util.adb import connection
+from util.package_info import Package_Tool, Package
 from util.noti import *
-from util.package_info.trie import PackageList
+from util.tool import write_list
 from pathlib import Path
+from tqdm import tqdm
+
+import json
 
 
 def show(device):
-    valid_device = is_valid(device)
+    valid_device = connection.is_valid(device)
     check_aapt(valid_device)
     a = valid_device.shell('pm list packages -s -f')
 
     for line in a.split('\n'):
         if len(line) is not 0:
-            package_name, package_label, _ = information(line)
-            if len(package_label) is 0:
-                print('Package Name : {0}'.format(package_name))
+            item = Package_Tool.information(line)
+            if len(item['label']) is 0:
+                print('Package Name : {0}'.format(item['package']))
             else:
                 print('Package Name : {0}, Package Label : {1}'.format(
-                    package_name, package_label))
+                    item['package'], item['label']))
 
     input('\npress any key to continue...')
 
 
 def get(device):
-    valid_device = is_valid(device)
+    valid_device = connection.is_valid(device)
     check_aapt(valid_device)
 
     info_printer('package_list_loading')
     a = valid_device.shell('pm list packages -s -f')
     package_list = list()
 
-    for line in a.split('\n'):
+    for line in tqdm(a.split('\n')):
         if len(line) is not 0:
-            package = dict()
-            package['package'], package_label, package['path'] = information(line)
-            if len(package_label) is not 0:
-                package['label'] = package_label
-            package_list.append(package)
+            package_list.append(Package_Tool.information(line))
 
     return package_list
 
 
 def show_by_name(device):
     name = input('Input Package Name : ')
-    result = []
 
-    valid_device = is_valid(device)
+    valid_device = connection.is_valid(device)
 
     for p in get_list(valid_device):
         if name in p:
@@ -71,38 +68,38 @@ def find_package_by_name(device):
     name = input('Input Package Name : ')
     result = []
 
-    valid_device = is_valid(device)
+    valid_device = connection.is_valid(device)
 
     for p in get_list(valid_device):
         if name in p:
             result.append(p)
+
     return result
 
 
-def make_package_list(device):
-    valid_device = is_valid(device)
+def make(device):
+    valid_device = connection.is_valid(device)
     package_list = get(valid_device)
-    packages = list()
 
     info_printer('config_write_info')
-    config_name = str(input('Please Input config file name : '))
+    config_name = str(input('Please Input config file name : ')) + '.json'
 
     config_descriptor = Path(Path.cwd() / 'config' /
                              config_name).open('w', encoding='utf-8')
 
-    helper = PackageList(package_list)
+    helper = Package.PackageList(package_list)
 
     info_printer('list_make_input')
-    while True:
-        package_input = str(input('> '))
-        if package_input == '/END':
-            break
-        elif package_list == '/MODE':
-            helper.change_mode()
-        else:
-            packages.append(package_input)
+    packages = write_list(helper)
 
-    package_config = config_writer(packages)
-    config_descriptor.write(package_config)
+    # package_config = config_writer(packages)
+    print(packages)
+    print(json.dumps(packages))
+    config_descriptor.write(json.dumps(packages))
+    config_descriptor.close()
 
     info_printer('done')
+
+
+def load():
+    config = Path.open()

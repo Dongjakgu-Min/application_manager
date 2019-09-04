@@ -2,10 +2,11 @@ from util.adb.connection import check
 
 
 def information(line):
-    package_name = line.split(':')[-1].split('=')[-1]
-    package_path = line[8:-(len(package_name)+1)]
-    package_label = label(package_path)
-    return package_name, package_label, package_path
+    _package = line.split(':')[-1].split('=')[-1]
+    _path = line[8:-(len(_package)+1)]
+    _label = label(_path)
+
+    return {'package': _package, 'label': _label if len(_label) is not 0 else None, 'path': _path}
 
 
 def label(path):

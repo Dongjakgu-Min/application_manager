@@ -1,6 +1,6 @@
 list_error = {
-    'not_connected': '[ERR] Device Not Detected. \
-     Check Device is connected or USB Debugging is ON, Waiting Connection...',
+    'not_connected': '[ERR] Device Not Detected. ' +
+                     'Check Device is connected or USB Debugging is ON, Waiting Connection...',
     'file_not_exist': '[ERR] file not exist! Please Check input path.',
     'not_config': '[ERR] It is not config, Did you check where is it?',
     'disconnected': '[ERR] Target Device was disconnected! Waiting Connection...',

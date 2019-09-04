@@ -1,6 +1,6 @@
 from util.tool import input_int, file_check
 from util.adb import connection
-from package.package_list import make_package_list
+from package.package_list import make
 from pathlib import Path
 
 
@@ -33,7 +33,7 @@ def config_main(device):
             break
         elif i is 5:
             valid = connection.is_valid(device)
-            make_package_list(valid)
+            make(valid)
             return None
         elif i is 6:
             return 'Manual'
